@@ -1,5 +1,7 @@
 package mis.scene;
 
+import mis.game.Player;
+
 import hxt.input.Input;
 import hxt.obj2d.Obj;
 import hxt.scene.Stage;
@@ -12,9 +14,7 @@ import h2d.Tile;
 import hxd.res.DefaultFont;
 
 class WoodsScene extends GameScene {
-  public static inline var SPEED = 100;
-
-  var player : Obj;
+  var player : Player;
   var fallingTree : Obj;
 
   public function new(stage : Stage) {
@@ -41,8 +41,7 @@ class WoodsScene extends GameScene {
     fallingTree.x = 500;
     fallingTree.y = 300;
 
-    var playerSprite = new Bitmap(Tile.fromColor(0xcc0000, 16, 48));
-    player = new Obj(playerSprite, null, null, s2d);
+    player = new Player(s2d);
     player.x = 500;
     player.y = 500;
   }
@@ -54,11 +53,7 @@ class WoodsScene extends GameScene {
       return;
     }
 
-    if (Input.game.isDown("moveLeft")) {
-      player.x -= dt * SPEED;
-    } else if (Input.game.isDown("moveRight")) {
-      player.x += dt * SPEED;
-    }
+    player.update(dt);
   }
 
   override function trDone(dt : Float) {
