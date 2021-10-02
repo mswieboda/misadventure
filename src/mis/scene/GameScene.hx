@@ -6,53 +6,53 @@ import hxt.scene.Scene;
 
 import h2d.Bitmap;
 import h2d.Graphics;
+import h2d.Object;
 import h2d.Text;
 import h2d.Tile;
 import hxd.res.DefaultFont;
 
 class GameScene extends Scene {
-  public static inline var ROTATION_SPEED = 3;
-  public static inline var SCALE_SPEED = 1.666;
+  public static inline var TR_SPEED = 1;
 
-  var scalingUp = true;
-  var box : Bitmap;
+  var trOverlay : Object;
+  var trText : Text;
+  var isTrDone = false;
 
-  public function new(stage : Stage) {
+  public function new(stage : Stage, text : String) {
     super(stage);
 
-    var size = 50;
+    trOverlay = new Object();
 
-    // tile size by size, with it's x, y centered so it can rotate from it's center origin
-    var tile = Tile.fromColor(0xFF0000, size, size).sub(0, 0, size, size, -size * 0.5, -size * 0.5);
+    s2d.add(trOverlay, 1);
 
-    box = new Bitmap(tile, s2d);
+    var bg = new h2d.Graphics(s2d);
 
-    box.x = s2d.width * 0.5;
-    box.y = s2d.height * 0.666;
+    //specify a color we want to draw with
+    bg.beginFill(0x000000);
+    bg.drawRect(0, 0, stage.s2d.width, stage.s2d.height);
+    bg.endFill();
 
-    new Graphics(box);
+    trOverlay.addChild(bg);
 
-    var text = new Text(DefaultFont.get(), s2d);
-    text.text = "press ESC to go back to menu!";
-    text.x = (s2d.width - text.textWidth) * 0.5;
-    text.y = s2d.height * 0.333 - text.textHeight * 0.5;
+    // NOTE: DefaultFont is 12, so keep factor of 12 for best results
+    var trFont = DefaultFont.get().clone();
+    trFont.resizeTo(24);
+
+    var trText = new Text(trFont, s2d);
+    trText.text = text;
+    trText.x = (s2d.width - trText.textWidth) * 0.5;
+    trText.y = s2d.height * 0.333 - trText.textHeight * 0.5;
+
+    trOverlay.addChild(trText);
   }
 
   public override function update(dt: Float) {
-    box.rotation += dt * ROTATION_SPEED;
-
-    // scale up, then scale down, repeat
-    if (scalingUp) {
-      if (box.scaleX <= 1.5) {
-        box.scale(1 + dt * SCALE_SPEED);
+    if (!isTrDone) {
+      if (isTr()) {
+        trUpdate(dt);
       } else {
-        scalingUp = false;
-      }
-    } else if (!scalingUp) {
-      if (box.scaleX > 0.5) {
-        box.scale(1 - dt * SCALE_SPEED);
-      } else {
-        scalingUp = true;
+        isTrDone = true;
+        trDone(dt);
       }
     }
 
@@ -60,4 +60,15 @@ class GameScene extends Scene {
       stage.changeScene(new MenuScene(stage));
     }
   }
+
+  function isTr() : Bool {
+    return trOverlay.alpha > 0;
+  }
+
+  function trUpdate(dt: Float) {
+    trOverlay.alpha -= TR_SPEED * dt;
+  }
+
+  // NOTE: to be overridden by child scene
+  function trDone(dt : Float) {}
 }

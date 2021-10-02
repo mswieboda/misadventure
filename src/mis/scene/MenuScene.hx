@@ -27,7 +27,7 @@ class MenuScene extends Scene {
 
     var menuItemData = [{
       text: "start",
-      action: () -> stage.changeScene(new GameScene(stage))
+      action: () -> stage.changeScene(new WoodsScene(stage))
     },
     {
       text: "exit",
