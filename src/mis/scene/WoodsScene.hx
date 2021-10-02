@@ -43,6 +43,12 @@ class WoodsScene extends GameScene {
     fallingTree.y = 300;
     fallingTree.filter = new h2d.filter.Glow(0xff6600);
 
+    var jackSprite = new Bitmap(Res.jack1.toTile(), s2d);
+    var jack = new Obj(jackSprite, null, null, s2d);
+    jack.x = 500;
+    jack.y = 500;
+    jack.filter = new h2d.filter.Glow(0xff6600);
+
     player = new Player(s2d);
     player.x = 500;
     player.y = 500;
@@ -50,6 +56,8 @@ class WoodsScene extends GameScene {
 
   public override function update(dt: Float) {
     super.update(dt);
+
+    s2d.ysort(0);
 
     if (!isTrDone) {
       return;
