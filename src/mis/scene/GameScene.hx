@@ -1,5 +1,8 @@
 package mis.scene;
 
+import mis.game.HeadsUpDisplay;
+import mis.game.Player;
+
 import hxt.input.Input;
 import hxt.scene.Stage;
 import hxt.scene.Scene;
@@ -14,6 +17,8 @@ import hxd.res.DefaultFont;
 class GameScene extends Scene {
   public static inline var TR_SPEED = 1;
 
+  var player : Player;
+  var hud : HeadsUpDisplay;
   var trOverlay : Object;
   var trText : Text;
   var isTrDone = false;
@@ -44,6 +49,9 @@ class GameScene extends Scene {
     trText.y = s2d.height * 0.333 - trText.textHeight * 0.5;
 
     trOverlay.addChild(trText);
+
+    player = new Player(s2d);
+    hud = new HeadsUpDisplay(player, s2d);
   }
 
   public override function update(dt: Float) {
@@ -54,6 +62,9 @@ class GameScene extends Scene {
         isTrDone = true;
         trDone(dt);
       }
+    } else {
+      player.update(dt);
+      hud.update(dt);
     }
 
     if (Input.menu.isPressed("exit")) {

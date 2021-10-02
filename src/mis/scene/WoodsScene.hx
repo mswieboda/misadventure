@@ -1,7 +1,5 @@
 package mis.scene;
 
-import mis.game.Player;
-
 import hxt.input.Input;
 import hxt.obj2d.Obj;
 import hxt.scene.Stage;
@@ -15,7 +13,6 @@ import h2d.Tile;
 import hxd.res.DefaultFont;
 
 class WoodsScene extends GameScene {
-  var player : Player;
   var fallingTree : Obj;
 
   public function new(stage : Stage) {
@@ -49,7 +46,6 @@ class WoodsScene extends GameScene {
     jack.y = 500;
     jack.filter = new h2d.filter.Glow(0xff6600);
 
-    player = new Player(s2d);
     player.x = 500;
     player.y = 500;
   }
@@ -57,16 +53,11 @@ class WoodsScene extends GameScene {
   public override function update(dt: Float) {
     super.update(dt);
 
-    s2d.ysort(0);
-
     if (!isTrDone) {
       return;
     }
 
-    player.update(dt);
-  }
-
-  override function trDone(dt : Float) {
-
+    // TODO: do a custom sort using height, not just y
+    s2d.ysort(0);
   }
 }
