@@ -9,6 +9,7 @@ import hxt.scene.Scene;
 
 import h2d.Bitmap;
 import h2d.Graphics;
+import hxd.Res;
 import h2d.Text;
 import h2d.Tile;
 import hxd.res.DefaultFont;
@@ -20,26 +21,27 @@ class WoodsScene extends GameScene {
   public function new(stage : Stage) {
     super(stage, "Wiley Woods");
 
-    var tile = Tile.fromColor(0x00cc00, 16, 64);
-
     // background trees
+    var treeTile = Tile.fromColor(0x00cc00, 16, 64);
     var treesData = [
-      {x: 100, y: 200},
-      {x: 500, y: 300},
-      {x: 600, y: 600},
+      {x: 100, y: 200, res: Res.tree1},
+      {x: 500, y: 300, res: Res.tree1},
+      {x: 600, y: 600, res: Res.tree1},
     ];
 
     for (treeData in treesData) {
+      var tile = treeData.res == null ? treeTile : treeData.res.toTile();
       var treeSprite = new Bitmap(tile, s2d);
       var tree = new Obj(treeSprite, null, null, s2d);
       tree.x = treeData.x;
       tree.y = treeData.y;
     }
 
-    var treeSprite = new Bitmap(tile, s2d);
+    var treeSprite = new Bitmap(Res.tree1.toTile(), s2d);
     fallingTree = new Obj(treeSprite, null, null, s2d);
     fallingTree.x = 500;
     fallingTree.y = 300;
+    fallingTree.filter = new h2d.filter.Glow(0xff6600);
 
     player = new Player(s2d);
     player.x = 500;
